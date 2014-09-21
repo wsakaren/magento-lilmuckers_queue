@@ -14,10 +14,10 @@
 
 interface Lilmuckers_Queue_Model_Adapter {
 
-    function _loadConnection();
-    function _reserveFromQueues($queues);
-    function _touch(Lilmuckers_Queue_Model_Queue_Task $task);
-    function _getMappedTaskData(Lilmuckers_Queue_Model_Queue_Task $task);
+    function getTask($queue);
+    function run($queues);
+    function getRunInline();
+    function touch(Lilmuckers_Queue_Model_Queue_Task $task);
 
 
 }

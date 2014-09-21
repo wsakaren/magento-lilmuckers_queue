@@ -17,7 +17,7 @@
  * @license  MIT http://choosealicense.com/licenses/mit/
  * @link     https://github.com/lilmuckers/magento-lilmuckers_queue
  */
-class Lilmuckers_Queue_Model_Adapter_Gearman extends Lilmuckers_Queue_Model_Adapter_Abstract
+class Lilmuckers_Queue_Model_Adapter_Gearman extends Lilmuckers_Queue_Model_Adapter_Abstract  implements Lilmuckers_Queue_Model_Adapter
 {
 
     
