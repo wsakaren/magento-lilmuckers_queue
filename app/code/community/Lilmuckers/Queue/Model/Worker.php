@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Magento Simple Asyncronous Queuing Module
  *
@@ -19,13 +19,13 @@
  */
 class Lilmuckers_Queue_Model_Worker extends Lilmuckers_Queue_Model_Worker_Abstract
 {
-    /** 
+    /**
      * Test worker - just throws an exception
-     * 
-     * @param Lilmuckers_Queue_Model_Queue_Task $task Task handler object 
-     * 
+     *
+     * @param Lilmuckers_Queue_Model_Queue_Task $task Task handler object
+     *
      * @throws Mage_Core_Exception at all times
-     * 
+     *
      * @return Lilmuckers_Queue_Model_Worker
      */
     public function testError(Lilmuckers_Queue_Model_Queue_Task $task)
@@ -33,12 +33,12 @@ class Lilmuckers_Queue_Model_Worker extends Lilmuckers_Queue_Model_Worker_Abstra
         throw new Mage_Core_Exception('Test Exception');
         return $this;
     }
-    
-    /** 
+
+    /**
      * Test worker - just flags the task as a success and ends
-     * 
+     *
      * @param Lilmuckers_Queue_Model_Queue_Task $task Task handler object
-     * 
+     *
      * @return Lilmuckers_Queue_Model_Worker
      */
     public function testSuccess(Lilmuckers_Queue_Model_Queue_Task $task)
@@ -46,12 +46,12 @@ class Lilmuckers_Queue_Model_Worker extends Lilmuckers_Queue_Model_Worker_Abstra
         $task->success();
         return $this;
     }
-    
-    /** 
+
+    /**
      * Test worker - just flags the task to be retried ends
-     * 
+     *
      * @param Lilmuckers_Queue_Model_Queue_Task $task Task handler object
-     * 
+     *
      * @return Lilmuckers_Queue_Model_Worker
      */
     public function testRetry(Lilmuckers_Queue_Model_Queue_Task $task)
@@ -59,17 +59,25 @@ class Lilmuckers_Queue_Model_Worker extends Lilmuckers_Queue_Model_Worker_Abstra
         $task->retry();
         return $this;
     }
-    
-    /** 
+
+    /**
      * Test worker - just flags the task as a success and ends
-     * 
+     *
      * @param Lilmuckers_Queue_Model_Queue_Task $task Task handler object
-     * 
+     *
      * @return Lilmuckers_Queue_Model_Worker
      */
     public function test(Lilmuckers_Queue_Model_Queue_Task $task)
     {
         $task->success();
         return $this;
+    }
+
+    /**
+     * @param Lilmuckers_Queue_Model_Queue_Task $task
+     */
+    public function run(Lilmuckers_Queue_Model_Queue_Task $task)
+    {
+        //do nothing in sample worker
     }
 }

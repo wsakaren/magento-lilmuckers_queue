@@ -9,4 +9,5 @@
 
 interface Lilmuckers_Queue_Interfaces_Worker {
 
+    public function run(Lilmuckers_Queue_Model_Queue_Task $task);
 } 

@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Magento Simple Asyncronous Queuing Module
  *
@@ -18,5 +18,7 @@
  * @link     https://github.com/lilmuckers/magento-lilmuckers_queue
  */
 abstract class Lilmuckers_Queue_Model_Worker_Abstract extends Varien_Object
+    implements Lilmuckers_Queue_Interfaces_Worker
 {
+
 }
