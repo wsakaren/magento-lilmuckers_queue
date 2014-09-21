@@ -245,6 +245,10 @@ Within the `local.xml` you'll now need to set the **backend value** to the code 
 ### 4. Done
 Have a nice cup of tea and a sit down.
 
+## Dependencies
+
+For Amazon AWSSDKforPHP/aws.phar is needed... See install instructions here https://github.com/aws/aws-sdk-php#aws-sdk-for-php
+
 ## Testing
 The unit tests are built with [EcomDev_PHPUnit](https://github.com/EcomDev/EcomDev_PHPUnit) and should run with the standard test-suite.
 
