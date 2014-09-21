@@ -100,6 +100,7 @@ See the file `app/etc/local.xml.queuesample` for advanced configuration examples
 
 ### Creating a queue handler, defining workers, and sending a task to the queue
  * Define a queue in you modules `config.xml`, with the workers that exist in that queue. All workers are run as `singletons`.
+  A queue handler should extend Lilmuckers_Queue_Model_Queue_Abstract.
 
 ```xml
 <?xml version="1.0"?>
