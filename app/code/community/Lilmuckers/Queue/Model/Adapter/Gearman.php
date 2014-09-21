@@ -19,10 +19,7 @@
  */
 class Lilmuckers_Queue_Model_Adapter_Gearman extends Lilmuckers_Queue_Model_Adapter_Abstract
 {
-    /**
-     * Constant for the path to the amazon sqs config
-     */
-    const GEARMAN_CONFIG = 'global/queue/gearman/servers';
+
     
     /**
      * Constant of maximum priority
@@ -60,13 +57,14 @@ class Lilmuckers_Queue_Model_Adapter_Gearman extends Lilmuckers_Queue_Model_Adap
         //we have a stored connection
         if (!$this->_gmClient) {
             //Get the config, start the client object
-            $_config         = $this->_getConfiguration();
             $this->_gmClient = new GearmanClient();
             
             //add the servers to the client
-            foreach ($_config as $_server) {
-                $this->_gmClient->addServer($_server['host'], $_server['port']);
-            }
+            // Changed to only support 1 server at present
+            //foreach ($_config as $_server) {
+                $this->_gmClient->addServer(Mage::getStoreConfig('system/lilqueue/gearman_host'),
+                    Mage::getStoreConfig('system/lilqueue/gearman_port'));
+           // }
         }
         
         return $this->_gmClient;
@@ -82,13 +80,13 @@ class Lilmuckers_Queue_Model_Adapter_Gearman extends Lilmuckers_Queue_Model_Adap
         //we have a stored connection
         if (!$this->_gmWorker) {
             //Get the config, start the client object
-            $_config         = $this->_getConfiguration();
             $this->_gmWorker = new GearmanWorker();
             
             //add the servers to the client
-            foreach ($_config as $_server) {
-                $this->_gmWorker->addServer($_server['host'], $_server['port']);
-            }
+            //foreach ($_config as $_server) {
+                $this->_gmWorker->addServer(Mage::getStoreConfig('system/lilqueue/gearman_host'),
+                    Mage::getStoreConfig('system/lilqueue/gearman_port'));
+            //}
         }
         
         return $this->_gmWorker;
@@ -105,19 +103,7 @@ class Lilmuckers_Queue_Model_Adapter_Gearman extends Lilmuckers_Queue_Model_Adap
         return $this;
     }
     
-    /**
-     * Get the amazonsqs connection configuration
-     * 
-     * @return array
-     */
-    protected function _getConfiguration()
-    {
-        //load the config from the local.xml and array it
-        $_config = Mage::getConfig()->getNode(self::GEARMAN_CONFIG);
-        $_config = $_config->asArray();
-        
-        return $_config;
-    }
+
     
     /**
      * Add the task to the queue

@@ -20,11 +20,6 @@
 class Lilmuckers_Queue_Model_Adapter_Beanstalk extends Lilmuckers_Queue_Model_Adapter_Abstract
 {
     /**
-     * Constant for the path to the beanstalkd config
-     */
-    const BEANSTALKD_CONFIG = 'global/queue/beanstalkd/servers/server';
-    
-    /**
      * Job status codes
      */
     const STATUS_READY    = 'ready';
@@ -69,11 +64,11 @@ class Lilmuckers_Queue_Model_Adapter_Beanstalk extends Lilmuckers_Queue_Model_Ad
     {
         //we have a stored connection
         if (!$this->_pheanstalk) {
-            $_config           = $this->_getConfiguration();
-            $this->_pheanstalk = new Pheanstalk_Pheanstalk($_config['host'], $_config['port']);
-            $this->_priority   = $_config['priority'];
-            $this->_delay      = $_config['delay'];
-            $this->_ttr        = $_config['ttr'];
+            $this->_pheanstalk = new Pheanstalk_Pheanstalk(Mage::getStoreConfig('system/lilqueue/beanstalk_host')
+                    , Mage::getStoreConfig('system/lilqueue/beanstalk_port'));
+            $this->_priority   = Mage::getStoreConfig('system/lilqueue/beanstalk_priority');
+            $this->_delay      = Mage::getStoreConfig('system/lilqueue/beanstalk_delay');
+            $this->_ttr        = Mage::getStoreConfig('system/lilqueue/beanstalk_ttr');
         }
         
         return $this->_pheanstalk;
@@ -94,17 +89,7 @@ class Lilmuckers_Queue_Model_Adapter_Beanstalk extends Lilmuckers_Queue_Model_Ad
             );
     }
     
-    /**
-     * Get the beanstalkd connection configuration
-     * 
-     * @return array
-     */
-    protected function _getConfiguration()
-    {
-        //load the config from the local.xml
-        $_config = Mage::getConfig()->getNode(self::BEANSTALKD_CONFIG);
-        return $_config->asArray();
-    }
+
     
     /**
      * Instantiate the connection
@@ -127,7 +112,7 @@ class Lilmuckers_Queue_Model_Adapter_Beanstalk extends Lilmuckers_Queue_Model_Ad
      */
     protected function _addToQueue($queue, Lilmuckers_Queue_Model_Queue_Task $task)
     {
-        //load the default prioriy, delay and ttr data
+        //load the default priority, delay and ttr data
         $_priority = is_null($task->getPriority())  ? $this->_priority : $task->getPriority();
         $_delay    = is_null($task->getDelay())     ? $this->_delay    : $task->getDelay();
         $_ttr      = is_null($task->getTtr())       ? $this->_ttr      : $task->getTtr();

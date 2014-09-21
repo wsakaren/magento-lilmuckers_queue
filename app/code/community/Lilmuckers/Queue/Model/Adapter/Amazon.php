@@ -26,12 +26,9 @@ use Aws\Sqs\Enum\MessageAttribute;
  * @license  MIT http://choosealicense.com/licenses/mit/
  * @link     https://github.com/lilmuckers/magento-lilmuckers_queue
  */
-class Lilmuckers_Queue_Model_Adapter_Amazon extends Lilmuckers_Queue_Model_Adapter_Abstract
+class Lilmuckers_Queue_Model_Adapter_Amazon extends Lilmuckers_Queue_Model_Adapter_Abstract implements Lilmuckers_Queue_Model_Adapter
 {
-    /**
-     * Constant for the path to the amazon sqs config
-     */
-    const AMAZONSQS_CONFIG = 'global/queue/amazonsqs/connection';
+
     
     /**
      * The SQS Client object
@@ -75,12 +72,11 @@ class Lilmuckers_Queue_Model_Adapter_Amazon extends Lilmuckers_Queue_Model_Adapt
     {
         //we have a stored connection
         if (!$this->_sqsClient) {
-            $_config          = $this->_getConfiguration();
             $this->_sqsClient = SqsClient::factory(
                 array(
-                    'key'    => $_config['key'],
-                    'secret' => $_config['secret'],
-                    'region' => $_config['region']
+                    'key'    => Mage::getStoreConfig('system/lilqueue/amazon_key'),
+                    'secret' => Mage::getStoreConfig('system/lilqueue/amazon_secret'),
+                    'region' => Mage::getStoreConfig('system/lilqueue/amazon_region')
                 )
             );
         }
@@ -98,27 +94,8 @@ class Lilmuckers_Queue_Model_Adapter_Amazon extends Lilmuckers_Queue_Model_Adapt
         $this->getConnection();
         return $this;
     }
-    
-    /**
-     * Get the amazonsqs connection configuration
-     * 
-     * @param string $value Value to retrieve from config
-     * 
-     * @return array
-     */
-    protected function _getConfiguration($value = null)
-    {
-        //load the config from the local.xml and array it
-        $_config = Mage::getConfig()->getNode(self::AMAZONSQS_CONFIG);
-        $_config = $_config->asArray();
-        
-        //return the requested value if isset
-        if (!is_null($value) && array_key_exists($value, $_config)) {
-            return $_config[$value];
-        }
-        return $_config;
-    }
-    
+
+
     /**
      * Add the task to the queue
      * 
@@ -195,16 +172,21 @@ class Lilmuckers_Queue_Model_Adapter_Amazon extends Lilmuckers_Queue_Model_Adapt
     protected function _getDefaultQueueAttr()
     {
         if (!$this->_queueDefaultAttr) {
-            $_config = $this->_getConfiguration();
-            
+
             //instantiate the array first of all
             $this->_queueDefaultAttr = array();
-            
-            //iterate through the config, and map applicable values
-            foreach ($_config as $_key => $_value) {
-                if (array_key_exists($_key, $this->_queueAttrMap)) {
-                    $this->_queueDefaultAttr[$this->_queueAttrMap[$_key]] = $_value;
-                }
+
+            if (Mage::getStoreConfig('system/lilqueue/amazon_delay')!='') {
+                $this->_queueDefaultAttr[$this->_queueAttrMap['delay']] = Mage::getStoreConfig('system/lilqueue/amazon_delay');
+            }
+            if (Mage::getStoreConfig('system/lilqueue/amazon_ttr')!='') {
+                $this->_queueDefaultAttr[$this->_queueAttrMap['ttr']] = Mage::getStoreConfig('system/lilqueue/amazon_ttr');
+            }
+            if (Mage::getStoreConfig('system/lilqueue/amazon_max_size')!='') {
+                $this->_queueDefaultAttr[$this->_queueAttrMap['max_size']] = Mage::getStoreConfig('system/lilqueue/amazon_max_size');
+            }
+            if (Mage::getStoreConfig('system/lilqueue/amazon_wait')!='') {
+                $this->_queueDefaultAttr[$this->_queueAttrMap['wait']] = Mage::getStoreConfig('system/lilqueue/amazon_wait');
             }
         }
         
@@ -325,7 +307,7 @@ class Lilmuckers_Queue_Model_Adapter_Amazon extends Lilmuckers_Queue_Model_Adapt
                 array(
                     'QueueUrl'          => $this->_getQueueUrl($_job['Queue']),
                     'ReceiptHandle'     => $_job['ReceiptHandle'],
-                    'VisibilityTimeout' => $this->_getConfiguration('ttr')
+                    'VisibilityTimeout' => Mage::getStoreConfig('system/lilqueue/amazon_ttr')
                 )
             );
         
@@ -459,7 +441,7 @@ class Lilmuckers_Queue_Model_Adapter_Amazon extends Lilmuckers_Queue_Model_Adapt
         $_data = array(
             'queue'        => $stats['Queue'],
             'age'          => time() - $stats['Attributes']['SentTimestamp'],
-            'ttr'          => $this->_getConfiguration('ttr'),
+            'ttr'          => Mage::getStoreConfig('system/lilqueue/amazon_ttr'),
             'reserves'     => $stats['Attributes']['ApproximateReceiveCount'],
         );
         

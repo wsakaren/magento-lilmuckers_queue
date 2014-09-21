@@ -52,31 +52,6 @@
                     <class>lilqueue/adapter_gearman</class>
                 </gearman>
             </adapters>
-            <beanstalkd>
-                <servers>
-                    <server>
-                        <port>11300</port>
-                        <priority>1024</priority>
-                        <delay>0</delay>
-                        <ttr>60</ttr>
-                    </server>
-                </servers>
-            </beanstalkd>
-            <amazonsqs>
-                <connection>
-                    <delay>0</delay>
-                    <ttr>60</ttr>
-                    <wait>5</wait>
-                </connection>
-            </amazonsqs>
-            <gearman>
-                <servers>
-                    <server>
-                        <host>127.0.0.1</host>
-                        <port>4730</port>
-                    </server>
-                </servers>
-            </gearman>
         </queue>
         
     </global>
@@ -115,5 +90,30 @@
             </workers>
         </unit_tests>
     </queues>
-    
+
+    <default>
+        <system>
+            <lilqueue>
+                <active>0</active>
+                <adaptor>beanstalkd</adaptor>
+                <beanstalk_host>127.0.0.1</beanstalk_host>
+                <beanstalk_port>11300</beanstalk_port>
+                <beanstalk_priority>1024</beanstalk_priority>
+                <beanstalk_delay>0</beanstalk_delay>
+                <beanstalk_ttr>60</beanstalk_ttr>
+                <amazon_delay>0</amazon_delay>
+                <amazon_ttr>60</amazon_ttr>
+                <amazon_key backend_model="adminhtml/system_config_backend_encrypted"/>
+                <amazon_secret backend_model="adminhtml/system_config_backend_encrypted"/>
+                <amazon_region/>
+                <amazon_max_size/>
+                <amazon_wait>5</amazon_wait>
+                <gearman_host>127.0.0.1</gearman_host>
+                <gearman_port>4730</gearman_port>
+            </lilqueue>
+        </system>
+
+    </default>
+
 </config>
+
