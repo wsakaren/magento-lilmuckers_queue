@@ -129,7 +129,9 @@ $_queue = Mage::helper('lilqueue')->getQueue('queueName');
 ```
   
 
- * Generate a task, providing the task identifier, the data for the task to use, and the store to provide to the task to run with.  
+ * Generate a task, providing the task identifier, the data for the task to use, and the store to provide to the task to run with.
+
+   TODO Create a better example here. What 'the worker' in 'to'=>'the worker'?
 
 ```php
 <?php
